@@ -23,6 +23,7 @@ export const BookSettings: React.FC<BookSettingsProps> = ({
 
   const pageSizes = [
     { label: 'Preview Size', value: { width: 700, height: 900 } },
+    { label: '2000x2000', value: { width: 2000, height: 2000 } },
     { label: 'A4', value: { width: 595, height: 842 } },
     { label: 'Letter', value: { width: 612, height: 792 } },
     { label: 'Large', value: { width: 800, height: 1000 } },
@@ -98,16 +99,16 @@ export const BookSettings: React.FC<BookSettingsProps> = ({
               <label className="block text-xs text-slate-400 mb-1">Width</label>
               <input
                 type="range"
-                min="400"
-                max="1200"
+                min="200"
+                max="3000"
                 value={pageSize.width}
                 onChange={(e) => onPageSizeChange({ ...pageSize, width: Number(e.target.value) })}
                 className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer slider"
               />
               <div className="flex justify-between text-xs text-slate-400 mt-1">
-                <span>400px</span>
+                <span>200px</span>
                 <span className="text-emerald-400 font-mono">{pageSize.width}px</span>
-                <span>1200px</span>
+                <span>3000px</span>
               </div>
             </div>
             
@@ -115,14 +116,14 @@ export const BookSettings: React.FC<BookSettingsProps> = ({
               <label className="block text-xs text-slate-400 mb-1">Height</label>
               <input
                 type="range"
-                min="500"
-                max="1400"
+                min="200"
+                max="3000"
                 value={pageSize.height}
                 onChange={(e) => onPageSizeChange({ ...pageSize, height: Number(e.target.value) })}
                 className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer slider"
               />
               <div className="flex justify-between text-xs text-slate-400 mt-1">
-                <span>500px</span>
+                <span>200px</span>
                 <span className="text-emerald-400 font-mono">{pageSize.height}px</span>
                 <span>1400px</span>
               </div>

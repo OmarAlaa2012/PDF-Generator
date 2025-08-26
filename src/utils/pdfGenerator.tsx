@@ -197,7 +197,7 @@ const PDFDocument = ({ entries, titleSize, pageSize }: PDFDocumentProps) => {
 export const generatePDF = async (
   entries: BookEntry[], 
   titleSize: number = 24,
-  pageSize: { width: number; height: number } = { width: 700, height: 900 }
+  pageSize: { width: number; height: number }
 ) => {
   const blob = await pdf(<PDFDocument entries={entries} titleSize={titleSize} pageSize={pageSize} />).toBlob();
   return blob;
@@ -207,7 +207,7 @@ export const downloadPDF = async (
   entries: BookEntry[], 
   filename = 'http-errors-reference.pdf',
   titleSize: number = 24,
-  pageSize: { width: number; height: number } = { width: 700, height: 900 }
+  pageSize: { width: number; height: number }
 ) => {
   const blob = await generatePDF(entries, titleSize, pageSize);
   const url = URL.createObjectURL(blob);
