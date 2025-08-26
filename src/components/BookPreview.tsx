@@ -68,6 +68,11 @@ export const BookPreview: React.FC<BookPreviewProps> = ({
       </div>
 
       {/* Page Preview */}
+      <div className="mb-2">
+        <span className="text-slate-400 text-sm font-mono">
+          Preview Frame: 700 × 900 pixels
+        </span>
+      </div>
       <div className="border border-slate-700 rounded-lg overflow-hidden">
         <BookPage 
           entry={entries[currentPage]} 
