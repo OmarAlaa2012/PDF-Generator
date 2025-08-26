@@ -1,20 +1,21 @@
-import { Document, Page, Text, View, StyleSheet, pdf, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer';
 import { BookEntry } from '../types/book';
 
 interface PDFDocumentProps {
   entries: BookEntry[];
   titleSize: number;
+  pageSize: { width: number; height: number };
 }
 
 // Create styles that match the preview exactly
-const createStyles = (titleSize: number) => StyleSheet.create({
+const createStyles = (titleSize: number, pageSize: { width: number; height: number }) => StyleSheet.create({
   page: {
     backgroundColor: '#0f172a', // slate-900
     padding: 32,
-    fontFamily: 'Courier',
+    fontFamily: 'Helvetica', // Using system font like the preview
     position: 'relative',
-    width: '100%',
-    height: '100%',
+    width: pageSize.width,
+    height: pageSize.height,
     display: 'flex',
     flexDirection: 'column',
   },
@@ -33,7 +34,7 @@ const createStyles = (titleSize: number) => StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 2,
     textAlign: 'center',
-    fontFamily: 'Courier',
+    fontFamily: 'Helvetica-Bold',
   },
   cardContainer: {
     flex: 1,
@@ -43,21 +44,16 @@ const createStyles = (titleSize: number) => StyleSheet.create({
     paddingHorizontal: 40,
   },
   card: {
-    backgroundColor: 'rgba(30, 41, 59, 0.9)', // slate-800/90 with backdrop blur effect
+    backgroundColor: 'rgba(30, 41, 59, 0.9)', // slate-800/90
     padding: 32,
     borderRadius: 12,
     border: '1px solid #334155', // slate-700
     position: 'relative',
-    width: '100%',
-    maxWidth: 512, // max-w-lg equivalent
-    height: 480,
+    width: 512, // Exact preview width
+    height: 480, // Exact preview height
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 25 },
-    shadowOpacity: 0.25,
-    shadowRadius: 25,
   },
   trafficLights: {
     position: 'absolute',
@@ -87,7 +83,7 @@ const createStyles = (titleSize: number) => StyleSheet.create({
     color: '#94a3b8', // slate-400
     fontSize: 18,
     fontWeight: 'bold',
-    fontFamily: 'Courier',
+    fontFamily: 'Helvetica-Bold',
   },
   contentContainer: {
     paddingTop: 16,
@@ -104,23 +100,24 @@ const createStyles = (titleSize: number) => StyleSheet.create({
   label: {
     color: '#10b981', // emerald-400
     fontWeight: 'bold',
-    fontFamily: 'Courier',
-    fontSize: 12,
+    fontFamily: 'Helvetica-Bold',
+    fontSize: 14,
     marginRight: 8,
+    minWidth: 80,
   },
   value: {
     color: 'white',
     flex: 1,
     lineHeight: 1.5,
-    fontSize: 12,
-    fontFamily: 'Courier',
+    fontSize: 14,
+    fontFamily: 'Helvetica',
   },
   detailsValue: {
     color: 'white',
     flex: 1,
     lineHeight: 1.6, // leading-relaxed
-    fontSize: 12,
-    fontFamily: 'Courier',
+    fontSize: 14,
+    fontFamily: 'Helvetica',
     marginTop: 4,
   },
   pageNumber: {
@@ -128,18 +125,18 @@ const createStyles = (titleSize: number) => StyleSheet.create({
     marginTop: 32,
     color: '#64748b', // slate-500
     fontSize: 14,
-    fontFamily: 'Courier',
+    fontFamily: 'Helvetica',
   },
 });
 
 // PDF Document Component
-const PDFDocument = ({ entries, titleSize }: PDFDocumentProps) => {
-  const styles = createStyles(titleSize);
+const PDFDocument = ({ entries, titleSize, pageSize }: PDFDocumentProps) => {
+  const styles = createStyles(titleSize, pageSize);
   
   return (
     <Document>
       {entries.map((entry, index) => (
-        <Page key={index} size="A4" style={styles.page}>
+        <Page key={index} size={[pageSize.width, pageSize.height]} style={styles.page}>
           {/* Background texture effect */}
           <View style={styles.backgroundTexture} />
           
@@ -197,17 +194,22 @@ const PDFDocument = ({ entries, titleSize }: PDFDocumentProps) => {
   );
 };
 
-export const generatePDF = async (entries: BookEntry[], titleSize: number = 24) => {
-  const blob = await pdf(<PDFDocument entries={entries} titleSize={titleSize} />).toBlob();
+export const generatePDF = async (
+  entries: BookEntry[], 
+  titleSize: number = 24,
+  pageSize: { width: number; height: number } = { width: 700, height: 900 }
+) => {
+  const blob = await pdf(<PDFDocument entries={entries} titleSize={titleSize} pageSize={pageSize} />).toBlob();
   return blob;
 };
 
 export const downloadPDF = async (
   entries: BookEntry[], 
   filename = 'http-errors-reference.pdf',
-  titleSize: number = 24
+  titleSize: number = 24,
+  pageSize: { width: number; height: number } = { width: 700, height: 900 }
 ) => {
-  const blob = await generatePDF(entries, titleSize);
+  const blob = await generatePDF(entries, titleSize, pageSize);
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;

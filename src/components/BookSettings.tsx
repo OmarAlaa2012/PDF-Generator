@@ -4,17 +4,28 @@ import { Settings } from 'lucide-react';
 interface BookSettingsProps {
   titleSize: number;
   onTitleSizeChange: (size: number) => void;
+  pageSize: { width: number; height: number };
+  onPageSizeChange: (size: { width: number; height: number }) => void;
 }
 
 export const BookSettings: React.FC<BookSettingsProps> = ({
   titleSize,
   onTitleSizeChange,
+  pageSize,
+  onPageSizeChange,
 }) => {
   const titleSizes = [
     { label: 'Small', value: 20 },
     { label: 'Medium', value: 24 },
     { label: 'Large', value: 28 },
     { label: 'Extra Large', value: 32 },
+  ];
+
+  const pageSizes = [
+    { label: 'Preview Size', value: { width: 700, height: 900 } },
+    { label: 'A4', value: { width: 595, height: 842 } },
+    { label: 'Letter', value: { width: 612, height: 792 } },
+    { label: 'Large', value: { width: 800, height: 1000 } },
   ];
 
   return (
@@ -58,6 +69,63 @@ export const BookSettings: React.FC<BookSettingsProps> = ({
               <span>16px</span>
               <span className="text-emerald-400 font-mono">{titleSize}px</span>
               <span>40px</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-300 mb-2">
+            PDF Page Size
+          </label>
+          <div className="grid grid-cols-2 gap-2">
+            {pageSizes.map((size) => (
+              <button
+                key={size.label}
+                onClick={() => onPageSizeChange(size.value)}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  pageSize.width === size.value.width && pageSize.height === size.value.height
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                }`}
+              >
+                {size.label}
+              </button>
+            ))}
+          </div>
+          
+          <div className="mt-3 space-y-2">
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Width</label>
+              <input
+                type="range"
+                min="400"
+                max="1200"
+                value={pageSize.width}
+                onChange={(e) => onPageSizeChange({ ...pageSize, width: Number(e.target.value) })}
+                className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer slider"
+              />
+              <div className="flex justify-between text-xs text-slate-400 mt-1">
+                <span>400px</span>
+                <span className="text-emerald-400 font-mono">{pageSize.width}px</span>
+                <span>1200px</span>
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Height</label>
+              <input
+                type="range"
+                min="500"
+                max="1400"
+                value={pageSize.height}
+                onChange={(e) => onPageSizeChange({ ...pageSize, height: Number(e.target.value) })}
+                className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer slider"
+              />
+              <div className="flex justify-between text-xs text-slate-400 mt-1">
+                <span>500px</span>
+                <span className="text-emerald-400 font-mono">{pageSize.height}px</span>
+                <span>1400px</span>
+              </div>
             </div>
           </div>
         </div>

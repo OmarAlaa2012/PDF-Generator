@@ -13,6 +13,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [titleSize, setTitleSize] = useState(24);
+  const [pageSize, setPageSize] = useState({ width: 700, height: 900 });
 
   const handleFileUpload = async (file: File) => {
     setIsLoading(true);
@@ -40,7 +41,7 @@ function App() {
     if (bookEntries.length === 0) return;
     
     try {
-      await downloadPDF(bookEntries, 'http-errors-reference.pdf', titleSize);
+      await downloadPDF(bookEntries, 'http-errors-reference.pdf', titleSize, pageSize);
     } catch (err) {
       setError('Failed to generate PDF. Please try again.');
       console.error(err);
@@ -133,6 +134,8 @@ function App() {
           <BookSettings
             titleSize={titleSize}
             onTitleSizeChange={setTitleSize}
+            pageSize={pageSize}
+            onPageSizeChange={setPageSize}
           />
 
           {/* Right Panel - Preview */}
