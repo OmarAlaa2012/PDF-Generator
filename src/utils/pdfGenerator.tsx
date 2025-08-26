@@ -1,5 +1,20 @@
-import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, pdf, Font } from '@react-pdf/renderer';
 import { BookEntry } from '../types/book';
+
+// Register fonts to match the preview exactly
+Font.register({
+  family: 'Inter',
+  fonts: [
+    {
+      src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2',
+      fontWeight: 'normal',
+    },
+    {
+      src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fAZ9hiA.woff2',
+      fontWeight: 'bold',
+    },
+  ],
+});
 
 interface PDFDocumentProps {
   entries: BookEntry[];
@@ -12,7 +27,7 @@ const createStyles = (titleSize: number, pageSize: { width: number; height: numb
   page: {
     backgroundColor: '#0f172a', // slate-900
     padding: 32,
-    fontFamily: 'Helvetica', // Using system font like the preview
+    fontFamily: 'Inter', // Match the web font
     position: 'relative',
     width: pageSize.width,
     height: pageSize.height,
@@ -32,9 +47,9 @@ const createStyles = (titleSize: number, pageSize: { width: number; height: numb
     fontSize: titleSize,
     marginBottom: 32,
     fontWeight: 'bold',
-    letterSpacing: 2,
+    letterSpacing: 1.5, // tracking-wider
     textAlign: 'center',
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'Inter',
   },
   cardContainer: {
     flex: 1,
@@ -49,8 +64,8 @@ const createStyles = (titleSize: number, pageSize: { width: number; height: numb
     borderRadius: 12,
     border: '1px solid #334155', // slate-700
     position: 'relative',
-    width: 512, // Exact preview width
-    height: 480, // Exact preview height
+    width: 512, // max-w-lg
+    height: 480,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -83,7 +98,7 @@ const createStyles = (titleSize: number, pageSize: { width: number; height: numb
     color: '#94a3b8', // slate-400
     fontSize: 18,
     fontWeight: 'bold',
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'Inter',
   },
   contentContainer: {
     paddingTop: 16,
@@ -94,38 +109,41 @@ const createStyles = (titleSize: number, pageSize: { width: number; height: numb
   },
   row: {
     marginBottom: 16,
+    flexDirection: 'column',
+  },
+  rowHeader: {
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
   label: {
     color: '#10b981', // emerald-400
     fontWeight: 'bold',
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'Inter',
     fontSize: 14,
     marginRight: 8,
-    minWidth: 80,
   },
   value: {
     color: 'white',
-    flex: 1,
-    lineHeight: 1.5,
     fontSize: 14,
-    fontFamily: 'Helvetica',
+    fontFamily: 'Inter',
+    marginLeft: 8,
+  },
+  detailsContainer: {
+    marginTop: 4,
+    marginLeft: 2,
   },
   detailsValue: {
     color: 'white',
-    flex: 1,
     lineHeight: 1.6, // leading-relaxed
     fontSize: 14,
-    fontFamily: 'Helvetica',
-    marginTop: 4,
+    fontFamily: 'Inter',
   },
   pageNumber: {
     textAlign: 'center',
     marginTop: 32,
     color: '#64748b', // slate-500
     fontSize: 14,
-    fontFamily: 'Helvetica',
+    fontFamily: 'Inter',
   },
 });
 
@@ -159,28 +177,42 @@ const PDFDocument = ({ entries, titleSize, pageSize }: PDFDocumentProps) => {
               {/* Content */}
               <View style={styles.contentContainer}>
                 <View style={styles.row}>
-                  <Text style={styles.label}>Error Code:</Text>
-                  <Text style={styles.value}>{entry.errorCode}</Text>
+                  <View style={styles.rowHeader}>
+                    <Text style={styles.label}>Error Code:</Text>
+                    <Text style={styles.value}>{entry.errorCode}</Text>
+                  </View>
                 </View>
                 
                 <View style={styles.row}>
-                  <Text style={styles.label}>Category:</Text>
-                  <Text style={styles.value}>{entry.category}</Text>
+                  <View style={styles.rowHeader}>
+                    <Text style={styles.label}>Category:</Text>
+                    <Text style={styles.value}>{entry.category}</Text>
+                  </View>
                 </View>
                 
                 <View style={styles.row}>
-                  <Text style={styles.label}>Meaning:</Text>
-                  <Text style={styles.value}>{entry.meaning}</Text>
+                  <View style={styles.rowHeader}>
+                    <Text style={styles.label}>Meaning:</Text>
+                    <Text style={styles.value}>{entry.meaning}</Text>
+                  </View>
                 </View>
                 
                 <View style={styles.row}>
-                  <Text style={styles.label}>Details:</Text>
-                  <Text style={styles.detailsValue}>{entry.details}</Text>
+                  <View style={styles.rowHeader}>
+                    <Text style={styles.label}>Details:</Text>
+                  </View>
+                  <View style={styles.detailsContainer}>
+                    <Text style={styles.detailsValue}>{entry.details}</Text>
+                  </View>
                 </View>
                 
                 <View style={styles.row}>
-                  <Text style={styles.label}>Fix:</Text>
-                  <Text style={styles.detailsValue}>{entry.fix}</Text>
+                  <View style={styles.rowHeader}>
+                    <Text style={styles.label}>Fix:</Text>
+                  </View>
+                  <View style={styles.detailsContainer}>
+                    <Text style={styles.detailsValue}>{entry.fix}</Text>
+                  </View>
                 </View>
               </View>
             </View>
